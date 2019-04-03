@@ -4,28 +4,58 @@
 
 <div class="jumbotron">
     <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+
+    <script>
+        window.onload = function () {
+
+            var dataPoints = [];
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                animationDuration: 30000,
+                theme: "dark2",
+
+                title: {
+                    text: "Predicción dolar"
+                },
+                axisY: {
+                    title: "Valor dolar",
+                    titleFontSize: 24,
+                    includeZero: false
+                },
+                data: [{
+                    title: "dias",
+                    type: "line",
+                    color: "white",
+
+                    //yValueFormatString: "HK$#,###",
+                    dataPoints: dataPoints
+                }]
+            });
+
+            function addData(data) {
+                for (var i = 0; i < data.length; i++) {
+                    dataPoints.push({
+                        x: (data[i].x + 1),
+                        y: data[i].y
+                    });
+                }
+                chart.render();
+
+            }
+
+            $.getJSON("/Home/json", addData);
+
+        }
+    </script>
+
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+@for (int i = 0; i < ViewBag.numTimes; i++)
+{
+    <li>prediccion para el dia @(i + 1) es: @ViewBag.Message[@i]</li>
+}
